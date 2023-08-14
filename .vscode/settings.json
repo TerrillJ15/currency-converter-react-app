@@ -1,0 +1,9 @@
+{
+  "cSpell.ignorePaths": ["extensions.json", "node_modules", "settings.json"],
+  "cSpell.words": ["datetime"],
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
+}
