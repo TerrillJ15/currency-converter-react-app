@@ -1,15 +1,23 @@
 import React from "react";
+import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import "./App.css";
-import NavBar from "./components/NavBar";
+import Navbar from "./components/NavBar";
+import RatesView from "./views/RatesView";
 
-function App() {
+const NotFound = () => {
+  return <h2>404 Not Found</h2>;
+};
+
+const App = () => {
   return (
-    <div className="App">
-      <div>
-        <NavBar />
-      </div>
-    </div>
+    <Router basename="/">
+      <Navbar />
+      <Switch>
+        <Route path="/" exact component={RatesView} />
+        <Route component={NotFound} />
+      </Switch>
+    </Router>
   );
-}
+};
 
 export default App;

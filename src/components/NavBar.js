@@ -1,10 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import img from "../assets/logo.png";
 
 const Navbar = () => {
   return (
-    <nav class="navbar navbar-light bg-light">
-      <a class="navbar-brand" href="/">
+    <nav className="navbar navbar-light bg-light">
+      <Link className="navbar-brand" to="/">
         <img
           src={img}
           className="App-logo"
@@ -12,7 +13,7 @@ const Navbar = () => {
           height="36"
           class="d-inline-block align-top"
         ></img>
-      </a>
+      </Link>
     </nav>
   );
 };
