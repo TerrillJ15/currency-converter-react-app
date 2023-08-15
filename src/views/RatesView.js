@@ -81,7 +81,7 @@ export default class RatesView extends React.Component {
                 <label for="text-amount">Amount</label>
               </div>
             </div>
-            <div class="col-auto">
+            <div class="col-12 col-md-auto pt-2 pt-md-0">
               <div class="form-floating">
                 <select
                   class="form-select"
@@ -95,7 +95,7 @@ export default class RatesView extends React.Component {
                 <label for="select-from">From</label>
               </div>
             </div>
-            <div class="col-auto">
+            <div class="col-12 col-md-auto pt-2 pt-md-0 text-center">
               <button
                 type="button"
                 class="btn btn-primary rounded-4"
@@ -116,7 +116,7 @@ export default class RatesView extends React.Component {
                 </svg>
               </button>
             </div>
-            <div class="col-auto">
+            <div class="col-12 col-md-auto pt-2 pt-md-0">
               <div class="form-floating">
                 <select
                   class="form-select"
