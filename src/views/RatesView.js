@@ -5,10 +5,16 @@ export default class RatesView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: "",
+      isLoading: false,
       rates: {},
       error: "",
+      amount: undefined,
+      from: "USD",
+      to: "CAD",
     };
+    this.onAmountChange = this.onAmountChange.bind(this);
+    this.onFromChange = this.onFromChange.bind(this);
+    this.onToChange = this.onToChange.bind(this);
   }
 
   async componentDidMount() {
@@ -21,8 +27,20 @@ export default class RatesView extends React.Component {
     this.setState({ isLoading: false, rates, error });
   }
 
+  onAmountChange(event) {
+    this.setState({ amount: event.target.value });
+  }
+
+  onFromChange(event) {
+    this.setState({ from: event.target.value });
+  }
+
+  onToChange(event) {
+    this.setState({ to: event.target.value });
+  }
+
   render() {
-    const { isLoading, rates, error } = this.state;
+    const { isLoading, rates, error, amount, to, from } = this.state;
     let page = undefined;
     if (!!error) {
       return (
@@ -43,13 +61,21 @@ export default class RatesView extends React.Component {
                 class="form-control"
                 id="text-amount"
                 placeholder="0.00"
+                value={amount}
+                onChange={this.onAmountChange}
               ></input>
               <label for="text-amount">Amount</label>
             </div>
           </div>
           <div class="col-auto">
             <div class="form-floating">
-              <select class="form-select" id="select-from" aria-label="From">
+              <select
+                class="form-select"
+                id="select-from"
+                aria-label="From"
+                value={from}
+                onChange={this.onFromChange}
+              >
                 {rateOptions}
               </select>
               <label for="select-from">From</label>
@@ -74,7 +100,13 @@ export default class RatesView extends React.Component {
           </div>
           <div class="col-auto">
             <div class="form-floating">
-              <select class="form-select" id="select-to" aria-label="To">
+              <select
+                class="form-select"
+                id="select-to"
+                aria-label="To"
+                value={to}
+                onChange={this.onToChange}
+              >
                 {rateOptions}
               </select>
               <label for="select-to">To</label>
