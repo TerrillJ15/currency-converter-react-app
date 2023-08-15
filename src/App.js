@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import "./App.css";
+import Footer from "./components/Footer";
 import Navbar from "./components/NavBar";
 import RatesView from "./views/RatesView";
 
@@ -12,10 +13,13 @@ const App = () => {
   return (
     <Router basename="/">
       <Navbar />
-      <Switch>
-        <Route path="/" exact component={RatesView} />
-        <Route component={NotFound} />
-      </Switch>
+      <div className="main-content">
+        <Switch>
+          <Route path="/" exact component={RatesView} />
+          <Route component={NotFound} />
+        </Switch>
+      </div>
+      <Footer />
     </Router>
   );
 };

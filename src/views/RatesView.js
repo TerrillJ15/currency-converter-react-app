@@ -131,8 +131,11 @@ export default class RatesView extends React.Component {
               </div>
             </div>
           </div>
-          <div className="row no-gutters">
-            <div className="col">{result}</div>
+          <div className="row no-gutters pt-4">
+            <div className="col text-center">
+              <h5>Result</h5>
+              <h1>{result}</h1>
+            </div>
           </div>
         </div>
       );
