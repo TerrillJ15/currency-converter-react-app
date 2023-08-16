@@ -2,6 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import img from "../assets/logo.png";
 
+/**
+ * @returns A template to render for the navigation bar.
+ */
 const Navbar = () => {
   return (
     <nav className="navbar fixed-top navbar-light bg-light">

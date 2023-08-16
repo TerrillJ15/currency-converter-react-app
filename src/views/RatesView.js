@@ -2,11 +2,13 @@ import React from "react";
 import { getMoneyRatesByBase } from "../services/MoneyService";
 const money = require("money");
 
+/**
+ * The main view for the rates page.
+ */
 export default class RatesView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: false,
       rates: {},
       error: "",
       amount: undefined,
@@ -14,16 +16,25 @@ export default class RatesView extends React.Component {
       to: "EUR",
       result: "--",
     };
+
+    // register the handlers with the component so the DOM can call them
     this.onChange = this.onChange.bind(this);
     this.onFlip = this.onFlip.bind(this);
   }
 
+  /**
+   * Retrieves the rates when the page is loaded.
+   */
   async componentDidMount() {
     await this.retrieveRates();
   }
 
+  /**
+   * Retrieves the rates from server and populates the money package with them.
+   * Uses the current from value as the base value for the rates.
+   * Updates the state of the view with the new rates.
+   */
   async retrieveRates() {
-    this.setState({ isLoading: true });
     const moneyRates = await getMoneyRatesByBase(this.state.from);
     let error = undefined;
     if (moneyRates) {
@@ -32,9 +43,12 @@ export default class RatesView extends React.Component {
     } else {
       error = "Unable to retrieve rates.";
     }
-    this.setState({ isLoading: false, rates: moneyRates?.rates, error });
+    this.setState({ rates: moneyRates?.rates, error });
   }
 
+  /**
+   * Calculates the result based on the enter amount, selected from and selected to.
+   */
   calculateResult() {
     let result = "--";
     if (this.state.amount !== "" && !isNaN(this.state.amount)) {
@@ -46,6 +60,13 @@ export default class RatesView extends React.Component {
     this.setState({ result });
   }
 
+  /**
+   * Handles when a control is updated to update the data value with the new value.
+   *
+   * @param {Event} event The change event containing the target and the new value.
+   * @param {String} key The key name of the data value to update.
+   * @param {Boolean} retrieveRates True if the rates should be retrieved after the state is updated.
+   */
   onChange(event, key, retrieveRates) {
     this.setState({ [key]: event.target.value }, async () => {
       if (retrieveRates) {
@@ -55,6 +76,9 @@ export default class RatesView extends React.Component {
     });
   }
 
+  /**
+   * Handles when the flip button is clicked to invert the to and from value.
+   */
   onFlip() {
     const to = this.state.from;
     const from = this.state.to;
@@ -64,16 +88,27 @@ export default class RatesView extends React.Component {
     });
   }
 
+  /**
+   * @returns The template to render.
+   *          If there was an error retrieving rates, display it.
+   *          Otherwise, display the rates page with the inputs,
+   *          result, and the exchange rates table.
+   */
   render() {
-    const { isLoading, rates, error, amount, to, from, result } = this.state;
+    // deconstruct the state of the data; state changes will rerender the page
+    const { rates, error, amount, to, from, result } = this.state;
+
+    // determine the page state
     let page = undefined;
     if (!!error) {
+      // there was an error, so display it
       return (
         <div class="alert alert-danger" role="alert">
           {error}
         </div>
       );
     } else if (rates) {
+      // has rates, so render the rates page
       let rateOptions = [];
       let tableRows = [];
       // loop through the rates in alphabetical order to build the dropdown options and the exchange table
@@ -88,6 +123,8 @@ export default class RatesView extends React.Component {
           </tr>
         );
       }
+
+      // apply the template to render for the rates page with the rates
       page = (
         <div>
           <div className="row no-gutters">
@@ -177,6 +214,8 @@ export default class RatesView extends React.Component {
         </div>
       );
     }
+
+    // return the template to render with the conditional templates
     return page;
   }
 }

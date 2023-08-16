@@ -1,5 +1,7 @@
 import React from "react";
-
+/**
+ * @returns A template to render for the footer.
+ */
 const Footer = () => {
   return (
     <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 px-2 mx-2 border-top">
