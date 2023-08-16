@@ -1,5 +1,5 @@
 import React from "react";
-import { getMoneyRates } from "../services/MoneyService";
+import { getMoneyRatesByBase } from "../services/MoneyService";
 const money = require("money");
 
 export default class RatesView extends React.Component {
@@ -10,7 +10,7 @@ export default class RatesView extends React.Component {
       rates: {},
       error: "",
       amount: undefined,
-      from: "USD",
+      from: "USD", // also the base
       to: "EUR",
       result: "--",
     };
@@ -19,8 +19,12 @@ export default class RatesView extends React.Component {
   }
 
   async componentDidMount() {
+    await this.retrieveRates();
+  }
+
+  async retrieveRates() {
     this.setState({ isLoading: true });
-    const moneyRates = await getMoneyRates();
+    const moneyRates = await getMoneyRatesByBase(this.state.from);
     let error = undefined;
     if (moneyRates) {
       money.rates = moneyRates.rates;
@@ -42,14 +46,22 @@ export default class RatesView extends React.Component {
     this.setState({ result });
   }
 
-  onChange(event, key) {
-    this.setState({ [key]: event.target.value }, this.calculateResult);
+  onChange(event, key, retrieveRates) {
+    this.setState({ [key]: event.target.value }, async () => {
+      if (retrieveRates) {
+        await this.retrieveRates();
+      }
+      this.calculateResult();
+    });
   }
 
   onFlip() {
     const to = this.state.from;
     const from = this.state.to;
-    this.setState({ to, from }, this.calculateResult);
+    this.setState({ to, from }, async () => {
+      await this.retrieveRates();
+      this.calculateResult();
+    });
   }
 
   render() {
@@ -88,7 +100,7 @@ export default class RatesView extends React.Component {
                   id="select-from"
                   aria-label="From"
                   value={from}
-                  onChange={(event) => this.onChange(event, "from")}
+                  onChange={(event) => this.onChange(event, "from", true)}
                 >
                   {rateOptions}
                 </select>

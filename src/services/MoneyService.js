@@ -1,11 +1,14 @@
 /**
  * Gets the latest rates from the server.
  *
+ * @param base The base currency to retrieve rates for. Defaults to 'USD'
  * @returns Rates object when successful; undefined when unsuccessful.
  */
-export const getMoneyRates = async () => {
+export const getMoneyRatesByBase = async (base = "USD") => {
   try {
-    let response = await fetch("https://api.frankfurter.app/latest");
+    let response = await fetch(
+      `https://api.frankfurter.app/latest?from=${base}`
+    );
     if (response.ok) {
       let data = await response.json();
       if (data && data.rates && data.base) {
