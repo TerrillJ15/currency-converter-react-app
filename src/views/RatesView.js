@@ -74,9 +74,17 @@ export default class RatesView extends React.Component {
         </div>
       );
     } else if (rates) {
-      const rateOptions = Object.keys(rates).map((rate) => {
-        return <option value={rate}>{rate}</option>;
-      });
+      let rateOptions = [];
+      let tableRows = [];
+      for (const rate of Object.keys(rates)) {
+        rateOptions.push(<option value={rate}>{rate}</option>);
+        tableRows.push(
+          <tr>
+            <td>{rate}</td>
+            <td>{rates[rate]}</td>
+          </tr>
+        );
+      }
       page = (
         <div>
           <div className="row no-gutters">
@@ -147,6 +155,19 @@ export default class RatesView extends React.Component {
             <div className="col text-center">
               <h5>Result</h5>
               <h1>{result}</h1>
+            </div>
+          </div>
+          <div className="row no-gutters pt-4">
+            <div className="col-12 col-md-4 offset-md-4">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Currency</th>
+                    <th>Rate</th>
+                  </tr>
+                </thead>
+                <tbody>{tableRows}</tbody>
+              </table>
             </div>
           </div>
         </div>
