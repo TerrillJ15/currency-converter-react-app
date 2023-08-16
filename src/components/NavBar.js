@@ -4,7 +4,7 @@ import img from "../assets/logo.png";
 
 const Navbar = () => {
   return (
-    <nav className="navbar navbar-light bg-light">
+    <nav className="navbar fixed-top navbar-light bg-light">
       <Link className="navbar-brand" to="/">
         <img
           src={img}

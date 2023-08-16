@@ -13,12 +13,12 @@ const App = () => {
   return (
     <Router basename="/">
       <Navbar />
-      <div className="main-content">
+      <main role="main" class="container pt-5 mt-5">
         <Switch>
           <Route path="/" exact component={RatesView} />
           <Route component={NotFound} />
         </Switch>
-      </div>
+      </main>
       <Footer />
     </Router>
   );

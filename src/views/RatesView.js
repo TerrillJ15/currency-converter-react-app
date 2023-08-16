@@ -76,7 +76,10 @@ export default class RatesView extends React.Component {
     } else if (rates) {
       let rateOptions = [];
       let tableRows = [];
-      for (const rate of Object.keys(rates)) {
+      // loop through the rates in alphabetical order to build the dropdown options and the exchange table
+      for (const rate of Object.keys(rates).sort((a, b) =>
+        a.localeCompare(b)
+      )) {
         rateOptions.push(<option value={rate}>{rate}</option>);
         tableRows.push(
           <tr>
@@ -158,7 +161,8 @@ export default class RatesView extends React.Component {
             </div>
           </div>
           <div className="row no-gutters pt-4">
-            <div className="col-12 col-md-4 offset-md-4">
+            <div className="col-12 col-md-4 offset-md-4 text-center">
+              <h5>Exchange Rates (Based from {from})</h5>
               <table className="table">
                 <thead>
                   <tr>
@@ -173,6 +177,6 @@ export default class RatesView extends React.Component {
         </div>
       );
     }
-    return <div className="container pt-4">{page}</div>;
+    return page;
   }
 }
