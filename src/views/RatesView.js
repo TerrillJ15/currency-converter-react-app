@@ -1,5 +1,9 @@
+import Chart from "chart.js";
 import React from "react";
-import { getMoneyRatesByBase } from "../services/MoneyService";
+import {
+  getHistoricalRates,
+  getMoneyRatesByBase,
+} from "../services/MoneyService";
 const money = require("money");
 
 /**
@@ -17,6 +21,8 @@ export default class RatesView extends React.Component {
       result: "--",
     };
 
+    this.chartRef = React.createRef();
+
     // register the handlers with the component so the DOM can call them
     this.onChange = this.onChange.bind(this);
     this.onFlip = this.onFlip.bind(this);
@@ -27,6 +33,7 @@ export default class RatesView extends React.Component {
    */
   async componentDidMount() {
     await this.retrieveRates();
+    await this.renderChart();
   }
 
   /**
@@ -73,6 +80,9 @@ export default class RatesView extends React.Component {
         await this.retrieveRates();
       }
       this.calculateResult();
+      if (key !== "amount") {
+        this.renderChart();
+      }
     });
   }
 
@@ -85,8 +95,56 @@ export default class RatesView extends React.Component {
     this.setState({ to, from }, async () => {
       await this.retrieveRates();
       this.calculateResult();
+      this.renderChart();
     });
   }
+
+  getLastMonthHistoricalRates = async () => {
+    const endDate = new Date().toISOString().split("T")[0];
+    const startDate = new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0];
+
+    return await getHistoricalRates(
+      startDate,
+      endDate,
+      this.state.from,
+      this.state.to
+    );
+  };
+
+  renderChart = async () => {
+    const response = await this.getLastMonthHistoricalRates();
+    const labels = Object.keys(response.rates);
+    const data = Object.values(response.rates).map(
+      (rate) => rate[this.state.to]
+    );
+    const label = `${this.state.from}/${this.state.to}`;
+
+    if (typeof this.chart !== "undefined") {
+      this.chart.destroy();
+    }
+
+    this.chart = new Chart(this.chartRef.current.getContext("2d"), {
+      type: "line",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: label,
+            data,
+            fill: false,
+            tension: 0,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+      },
+    });
+  };
+
+  //...
 
   /**
    * @returns The template to render.
@@ -198,7 +256,7 @@ export default class RatesView extends React.Component {
             </div>
           </div>
           <div className="row no-gutters pt-4">
-            <div className="col-12 col-md-4 offset-md-4 text-center">
+            <div className="col-12 col-md-4 text-center">
               <h5>Exchange Rates (Based from {from})</h5>
               <table className="table">
                 <thead>
@@ -209,6 +267,10 @@ export default class RatesView extends React.Component {
                 </thead>
                 <tbody>{tableRows}</tbody>
               </table>
+            </div>
+            <div className="col-12 col-md-8 text-center">
+              <h5>Historical Rates (Past 30 Days)</h5>
+              <canvas ref={this.chartRef} />
             </div>
           </div>
         </div>

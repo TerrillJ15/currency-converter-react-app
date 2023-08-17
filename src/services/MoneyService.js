@@ -21,3 +21,20 @@ export const getMoneyRatesByBase = async (base = "USD") => {
   }
   return undefined;
 };
+
+export const getHistoricalRates = async (startDate, endDate, from, to) => {
+  try {
+    let response = await fetch(
+      `https://api.frankfurter.app/${startDate}..${endDate}?from=${from}&to=${to}`
+    );
+    if (response.ok) {
+      let data = await response.json();
+      if (data && data.rates) {
+        return data;
+      }
+    }
+  } catch (e) {
+    console.error(e);
+  }
+  return undefined;
+};
